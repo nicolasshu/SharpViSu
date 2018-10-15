@@ -97,13 +97,13 @@ catch errorObj
 end
 % Update handles structure
 
-% 
+%
 
 % UIWAIT makes ClusterViSu wait for user response (see UIRESUME)
  %
 
 % --- Outputs from this function are returned to the command line.
-function varargout = ClusterViSu_OutputFcn(hObject, eventdata, handles, varargin) 
+function varargout = ClusterViSu_OutputFcn(hObject, eventdata, handles, varargin)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -186,7 +186,7 @@ end
 %     % The GUI is still in UIWAIT, use UIRESUME
 % temp = 1;
 % end
-wait(h); 
+wait(h);
 BW = createMask(h);
 delete(h);
 channel = get(handles.popupmenu1, 'Value');
@@ -228,14 +228,13 @@ end
 
 
 
-
 % --- Executes on button press in pushbutton7.
 function pushbutton7_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 try
-    
+
 % if isempty(gcp('nocreate'))
 %     parpool local;
 % end
@@ -323,7 +322,7 @@ function pushbutton11_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 try
-    
+
 channel = get(handles.popupmenu1, 'Value');
 A = handles.AB{channel};
 BW = handles.BW{channel};
@@ -350,8 +349,8 @@ elseif mode == 4 % Voronoi diagram
 elseif mode == 5 % interpolated Voronoi densities
     [ I1, ~ ] = drawVor(filterroi( A, BW, 1, pBW), pI, FOV(handles.AB{channel}));
 end
-    
-    
+
+
 if mode ~= 3:4 % if not Gaussian blur
 % find min and max pixels of the mask
 [a(:,1), a(:,2)] = find(BW);
@@ -362,7 +361,7 @@ I1 = I1(minmax(1,1):minmax(2,1), minmax(1,2):minmax(2,2));
 end
 
 if mode ~= 4
-    
+
 if exist ('L', 'var')
 handles.L{channel, mode} = L;
 end
@@ -545,7 +544,7 @@ if isfield(handles, 'Ripley')
             end
             xlim(handles.axes2, [0, max(Histograms(:,1))]);
             ylim(handles.axes2, [0, max(max(Histograms(:,2:end)))]);
-            set(handles.text42, 'String', 'Voronoi polygon area, nm²');
+            set(handles.text42, 'String', 'Voronoi polygon area, nmï¿½');
             end
     end
 end
@@ -574,7 +573,7 @@ if show == 1 % cluster area
     set(handles.text26, 'String', mean(area));
     set(handles.text16, 'String', median(area));
     set(handles.text18, 'String', std(area));
-    set(handles.text46, 'String', 'cluster area, nm²');
+    set(handles.text46, 'String', 'cluster area, nmï¿½');
 elseif show == 2 % diameter
     if mode == 4
         diam = 2 * sqrt(stats(:,2)/pi);
@@ -616,7 +615,7 @@ elseif show == 4 % events per cluster
     set(handles.text46, 'String', 'number of events in cluster');
 elseif show == 5 % density
     if mode == 4
-        Dens = 1000 * stats(:,1) ./ stats(:,2); % events/µm^2
+        Dens = 1000 * stats(:,1) ./ stats(:,2); % events/ï¿½m^2
     else
         I0 = handles.I0{channel};
         s = size(stats, 1);
@@ -625,14 +624,14 @@ elseif show == 5 % density
             ind = stats(i).PixelIdxList;
             NBeventsi = sum(I0(ind));
             area = stats(i).Area;
-            Dens(i) = NBeventsi/(area * (p * 0.001)^2); % events/µm^2
+            Dens(i) = NBeventsi/(area * (p * 0.001)^2); % events/ï¿½m^2
         end
     end
     hist(Dens, bins, 'Parent', handles.axes5);
     set(handles.text26, 'String', mean(Dens));
     set(handles.text16, 'String', median(Dens));
     set(handles.text18, 'String', std(Dens));
-    set(handles.text46, 'String', 'density of events in cluster, 1/µm');
+    set(handles.text46, 'String', 'density of events in cluster, 1/ï¿½m');
 end
 end
 
@@ -679,7 +678,7 @@ end
 
 function thresholding (handles)
 try
-    
+
 thresh = str2double(get(handles.edit9, 'String')); %threshold
 minima = str2double(get(handles.edit13, 'String')); %minimum for h-minima transform
 water = get(handles.checkbox1, 'Value'); % watershed
@@ -730,7 +729,7 @@ if mode ~= 4
             c = c+1;
             break
         end
-        end        
+        end
     end
     CC.PixelIdxList = obj;
     CC.NumObjects = size(obj,2);
@@ -751,7 +750,7 @@ else
     minmax(2,:) = max(a); % Xmax Ymax
     minmax = minmax * pBW / pI; % in pixels of I1;
     Binary = Binary(minmax(1,1)-3:minmax(2,1)-3, minmax(1,2)-3:minmax(2,2)-3);
-    ClustersMat = [clusters{:,2}; clusters{:,3}; clusters{:,4}]'; 
+    ClustersMat = [clusters{:,2}; clusters{:,3}; clusters{:,4}]';
     CC = bwconncomp(Binary);
 end
 
@@ -921,425 +920,473 @@ end
 
 % --------------------------------------------------------------------
 function Save_Callback(hObject, eventdata, handles)
-% hObject    handle to Save (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-try
-pathname = handles.folder;
-dir = uigetdir(pathname, 'Folder to save the data');
-dir = [dir '\'];
-channel = get(handles.popupmenu1, 'Value');
+    % hObject    handle to Save (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
 
-% save the preview
-if isfield(handles, 'prevRGB')
-if ~isempty(handles.prevRGB{channel})
-prevRGB = handles.prevRGB{channel};
-pixsize = get(handles.edit1, 'String');
-bright = get(handles.edit2, 'String');
-if channel == 1 %red eventlist
-FPName=[dir 'prev_red_' pixsize '_' bright '.tif'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'prev_green_' pixsize '_' bright '.tif'];
-end
-imwrite(prevRGB, FPName, 'Compression', 'lzw');
-end
-end
+    fig_ext = '.fig';
 
-% save the cluster map image
-if get(handles.popupmenu10, 'Value') == 1 % L(R)
-    base = 1;
-    basestr = 'L(R)';
-elseif get(handles.popupmenu10, 'Value') == 2 % g(R)
-    base = 2;
-    basestr = 'g(R)';
-elseif get(handles.popupmenu10, 'Value') == 3 % Gaussian blur
-    base = 3;
-    basestr = 'G';
-elseif get(handles.popupmenu10, 'Value') == 4 % Voronoi diagram
-    base = 4;
-    basestr = 'VorDiagram';
-elseif get(handles.popupmenu10, 'Value') == 5 % Voronoi density map
-    base = 5;
-    basestr = 'VorDensity';
-end
-if ~isempty(handles.LimRGB{channel, base})
-Lim = handles.LimRGB{channel, base};
-bright = get(handles.edit17, 'String');
-pixsize = get(handles.edit7, 'String');
-rad = get(handles.edit8, 'String');
-noise = get(handles.edit12, 'String');
-maxi = get(handles.text52, 'String');
-if channel == 1 %red eventlist
-FPName=[dir basestr '_red_' bright '_' pixsize '_' rad '_' noise '_' maxi '.tif'];
-elseif channel == 2 %green eventlist
-FPName=[dir basestr '_green_' bright '_' pixsize '_' rad '_' noise '_' maxi '.tif'];
-end
-if base ~=4
-    imwrite(Lim, FPName, 'Compression', 'lzw');
-else
-RGB = handles.LimRGB{channel, base};
-if ~isempty(RGB)
-    %axis(handles.axes3, 'equal');
-    h3 = figure('visible', 'off');
-    C = RGB{3};
-    V = RGB{2};
-    A = RGB{4};
-    hold on
-    for i = 1:length(C)
-        ppatch = patch(V(C{i},1), V(C{i},2), 'w');
-    end
-        plot(A(:,4), A(:,5), '.b', 'MarkerSize', 2);
-    hold off
-    set(ppatch, 'MarkerSize', 3);
-    ax = get(ppatch, 'Parent');
-    axis(ax, 'equal');
-    % find min and max pixels of the mask
-    BW = handles.BW{channel};
-    [a(:,1), a(:,2)] = find(BW);
-    minmax = zeros(2);
-    minmax(1,:) = min(a); % Xmin Ymin
-    minmax(2,:) = max(a); % Xmax Ymax
-    minmax = minmax * FOV(BW) / size(BW, 1); % in nm
-    ylim([minmax(1,1) minmax(2,1)]);
-    xlim([minmax(1,2) minmax(2,2)]);
-    set(ax, 'YDir', 'reverse');
-    if channel == 1 %red eventlist
-    FPName=[dir basestr '_red'];
-    elseif channel == 2 %green eventlist
-    FPName=[dir basestr '_green'];
-    end
-        % set style for graphs
-myStyle = hgexport('factorystyle');
-myStyle.Format = 'png';
-myStyle.Width = 15;
-myStyle.Height = 15;
-myStyle.Resolution = 300;
-myStyle.Units = 'inch';
-myStyle.FixedFontSize = 4;
+    try
+        pathname = handles.folder;
+        dir = uigetdir(pathname, 'Folder to save the data');
+        if ispc
+            dir = [dir '\'];
+        elseif isunix
+            dir = [dir '/'];
+        else
+            dir = [dir '/'];
+        end
+        channel = get(handles.popupmenu1, 'Value');
 
-    hgexport(h3, FPName, myStyle, 'Format', 'png');
-    close(h3);
-end
-end
-end
+        % save the preview
+        if isfield(handles, 'prevRGB')
+            if ~isempty(handles.prevRGB{channel})
+                prevRGB = handles.prevRGB{channel};
+                pixsize = get(handles.edit1, 'String');
+                bright = get(handles.edit2, 'String');
+                if channel == 1 %red eventlist
+                    FPName=[dir 'prev_red_' pixsize '_' bright fig_ext];
+                elseif channel == 2 %green eventlist
+                    FPName=[dir 'prev_green_'
+            endpixsize '_' bright fig_ext];
+                end
+                
+                Fig = figure; imshow(prevRGB); 
+                savefig(Fig, FPName); 
+                close(Fig);
+                if fig_ext ~= '.fig'
+                    imwrite(prevRGB, FPName, 'Compression', 'lzw');
+                end
+                
+            end
+        end
 
-% save the segmented image
-if isfield(handles, 'segmRGB') && ~isempty(handles.segmRGB{channel})
-segmRGB = handles.segmRGB{channel};
-pixsize = get(handles.edit7, 'String');
-rad = get(handles.edit8, 'String');
-noise = get(handles.edit12, 'String');
-thresh = get(handles.edit9, 'String');
-watersh = get(handles.checkbox1, 'Value');
-if watersh
-    hmin = get(handles.edit13, 'String');
-    waterstr = ['_w' hmin];
-else
-    waterstr = [];
-end
-exclmin = get(handles.edit15, 'String');
-exclmax = get(handles.edit16, 'String');
-if str2double(exclmin) ~=0 || str2double(exclmax) < Inf
-    strexcl = ['_excl' exclmin '-' exclmax];
-else
-    strexcl = [];
-end
-if channel == 1 %red eventlist
-FPName=[dir 'segm_' basestr '_red_' pixsize '_' rad '_' noise '_' thresh waterstr strexcl '.tif'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'segm_' basestr '_green_' pixsize '_' rad '_' noise '_' thresh waterstr strexcl '.tif'];
-end
-imwrite(segmRGB, FPName, 'Compression', 'lzw');
-end
+        % save the cluster map image
+        if get(handles.popupmenu10, 'Value') == 1 % L(R)
+            base = 1;
+            basestr = 'L(R)';
+        elseif get(handles.popupmenu10, 'Value') == 2 % g(R)
+            base = 2;
+            basestr = 'g(R)';
+        elseif get(handles.popupmenu10, 'Value') == 3 % Gaussian blur
+            base = 3;
+            basestr = 'G';
+        elseif get(handles.popupmenu10, 'Value') == 4 % Voronoi diagram
+            base = 4;
+            basestr = 'VorDiagram';
+        elseif get(handles.popupmenu10, 'Value') == 5 % Voronoi density map
+            base = 5;
+            basestr = 'VorDensity';
+        end
+        if ~isempty(handles.LimRGB{channel, base})
+        Lim = handles.LimRGB{channel, base};
+        bright = get(handles.edit17, 'String');
+        pixsize = get(handles.edit7, 'String');
+        rad = get(handles.edit8, 'String');
+        noise = get(handles.edit12, 'String');
+        maxi = get(handles.text52, 'String');
+        if channel == 1 %red eventlist
+        FPName=[dir basestr '_red_' bright '_' pixsize '_' rad '_' noise '_' maxi fig_ext];
+        elseif channel == 2 %green eventlist
+        FPName=[dir basestr '_green_' bright '_' pixsize '_' rad '_' noise '_' maxi fig_ext];
+        end
+        if base ~=4
+            Fig = figure; imshow(Lim); 
+            savefig(Fig, FPName); close(Fig);
+            if fig_ext ~= '.fig'
+                imwrite(Lim, FPName, 'Compression', 'lzw');
+            end
+        else
+        RGB = handles.LimRGB{channel, base};
+        if ~isempty(RGB)
+            %axis(handles.axes3, 'equal');
+            h3 = figure('visible', 'off');
+            C = RGB{3};
+            V = RGB{2};
+            A = RGB{4};
+            hold on
+            for i = 1:length(C)
+                ppatch = patch(V(C{i},1), V(C{i},2), 'w');
+            end
+                plot(A(:,4), A(:,5), '.b', 'MarkerSize', 2);
+            hold off
+            set(ppatch, 'MarkerSize', 3);
+            ax = get(ppatch, 'Parent');
+            axis(ax, 'equal');
+            % find min and max pixels of the mask
+            BW = handles.BW{channel};
+            [a(:,1), a(:,2)] = find(BW);
+            minmax = zeros(2);
+            minmax(1,:) = min(a); % Xmin Ymin
+            minmax(2,:) = max(a); % Xmax Ymax
+            minmax = minmax * FOV(BW) / size(BW, 1); % in nm
+            ylim([minmax(1,1) minmax(2,1)]);
+            xlim([minmax(1,2) minmax(2,2)]);
+            set(ax, 'YDir', 'reverse');
+            if channel == 1 %red eventlist
+            FPName=[dir basestr '_red'];
+            elseif channel == 2 %green eventlist
+            FPName=[dir basestr '_green'];
+            end
+                % set style for graphs
+        myStyle = hgexport('factorystyle');
+        myStyle.Format = 'png';
+        myStyle.Width = 15;
+        myStyle.Height = 15;
+        myStyle.Resolution = 300;
+        myStyle.Units = 'inch';
+        myStyle.FixedFontSize = 4;
+            
+            savefig(h3,FPName)
+%             hgexport(h3, FPName, myStyle);
+%             hgexport(h3, FPName, myStyle, 'Format', 'png');
+            close(h3);
+        end
+        end
+        end
 
-% save Ripley functions
-if isfield(handles, 'Ripley') && ~isempty(handles.Ripley{1, channel})
-    
-    % set style for graphs
-myStyle = hgexport('factorystyle');
-myStyle.Format = 'png';
-myStyle.Width = 6.41;
-myStyle.Height = 4;
-myStyle.Resolution = 300;
-myStyle.Units = 'inch';
-myStyle.FixedFontSize = 8;
+        % save the segmented image
+        if isfield(handles, 'segmRGB') && ~isempty(handles.segmRGB{channel})
+            segmRGB = handles.segmRGB{channel};
+            pixsize = get(handles.edit7, 'String');
+            rad = get(handles.edit8, 'String');
+            noise = get(handles.edit12, 'String');
+            thresh = get(handles.edit9, 'String');
+            watersh = get(handles.checkbox1, 'Value');
+            if watersh
+                hmin = get(handles.edit13, 'String');
+                waterstr = ['_w' hmin];
+            else
+                waterstr = [];
+            end
+            exclmin = get(handles.edit15, 'String');
+            exclmax = get(handles.edit16, 'String');
+            if str2double(exclmin) ~=0 || str2double(exclmax) < Inf
+                strexcl = ['_excl' exclmin '-' exclmax];
+            else
+                strexcl = [];
+            end
+            if channel == 1 %red eventlist
+                FPName=[dir 'segm_' basestr '_red_' pixsize '_' rad '_' noise '_' thresh waterstr strexcl fig_ext];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'segm_' basestr '_green_' pixsize '_' rad '_' noise '_' thresh waterstr strexcl fig_ext];
+            end
+            Fig = figure; imshow(segmRGB); 
+            savefig(Fig, FPName); close(Fig);
+            if fig_ext ~= '.fig'
+                imwrite(segmRGB, FPName, 'Compression', 'lzw');
+            end
+        end
 
-% get data
-step = get(handles.edit3, 'String');
-rmax = get(handles.edit4, 'String');
-conf = get(handles.edit5, 'String');
-iter = get(handles.edit6, 'String');
+        % save Ripley functions
+        if isfield(handles, 'Ripley') && ~isempty(handles.Ripley{1, channel})
 
-    % save K graph    
-if channel == 1 %red eventlist
-FPName=[dir 'K_red_' step '_' rmax '_' conf '_' iter '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'K_green_' step '_' rmax '_' conf '_' iter '.png'];
-end
-h3 = figure('visible', 'off');
-Ripley = handles.Ripley;
-R = Ripley{1,channel};
-K = Ripley{2,channel};
-if size(K, 2) > 1
-    plot(R, K(:,1), R, K(:,2), R, K(:,3));
-else
-    plot(R, K(:,1));
-end
-xlabel('r(nm)')
-ylabel('K(r)')
-hgexport(h3, FPName, myStyle, 'Format', 'png');
-close(h3);
+            % set style for graphs
+        myStyle = hgexport('factorystyle');
+        myStyle.Format = 'png';
+        myStyle.Width = 6.41;
+        myStyle.Height = 4;
+        myStyle.Resolution = 300;
+        myStyle.Units = 'inch';
+        myStyle.FixedFontSize = 8;
 
-% save L graph  
-if channel == 1 %red eventlist
-FPName=[dir 'L_red_' step '_' rmax '_' conf '_' iter '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'L_green_' step '_' rmax '_' conf '_' iter '.png'];
-end
-h3 = figure('visible', 'off');
-L = Ripley{3,channel};
-if size(L, 2) > 1
-    plot(R, L(:,1), R, L(:,2), R, L(:,3));
-else
-    plot(R, L(:,1));
-end
-xlabel('r(nm)')
-ylabel('L(r)')
-hgexport(h3, FPName, myStyle, 'Format', 'png');
-close(h3);
+        % get data
+        step = get(handles.edit3, 'String');
+        rmax = get(handles.edit4, 'String');
+        conf = get(handles.edit5, 'String');
+        iter = get(handles.edit6, 'String');
 
-% save Lmr graph  
-if channel == 1 %red eventlist
-FPName=[dir 'Lmr_red_' step '_' rmax '_' conf '_' iter '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'Lmr_green_' step '_' rmax '_' conf '_' iter '.png'];
-end
-h3 = figure('visible', 'off');
-Lmr = Ripley{4,channel};
-if size(Lmr, 2) > 1
-    plot(R, Lmr(:,1), R, Lmr(:,2), R, Lmr(:,3));
-else
-    plot(R, Lmr(:,1));
-end
-xlabel('r(nm)')
-ylabel('L(r) - r')
-hgexport(h3, FPName, myStyle, 'Format', 'png');
-close(h3);
+            % save K graph
+        if channel == 1 %red eventlist
+            FPName=[dir 'K_red_' step '_' rmax '_' conf '_' iter fig_ext];
+        elseif channel == 2 %green eventlist
+            FPName=[dir 'K_green_' step '_' rmax '_' conf '_' iter fig_ext];
+        end
+        h3 = figure('visible', 'off');
+        Ripley = handles.Ripley;
+        R = Ripley{1,channel};
+        K = Ripley{2,channel};
+        if size(K, 2) > 1
+            plot(R, K(:,1), R, K(:,2), R, K(:,3));
+        else
+            plot(R, K(:,1));
+        end
+        xlabel('r(nm)')
+        ylabel('K(r)')
+        savefig(h3, FPName);
+%         disp(FPName)
+%         hgexport(h3, FPName, myStyle, 'Format', 'png');
+        close(h3);
 
-% save g(r) graph  
-if channel == 1 %red eventlist
-FPName=[dir 'g_red_' step '_' rmax '_' conf '_' iter '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'g_green_' step '_' rmax '_' conf '_' iter '.png'];
-end
-h3 = figure('visible', 'off');
-K = Ripley{2,channel};
-dr = R(2) - R(1);
-eR = R(1:size(R,1)-1)+R(2)/2;
+        % save L graph
+        if channel == 1 %red eventlist
+            FPName=[dir 'L_red_' step '_' rmax '_' conf '_' iter fig_ext];
+        elseif channel == 2 %green eventlist
+            FPName=[dir 'L_green_' step '_' rmax '_' conf '_' iter fig_ext];
+        end
+        h3 = figure('visible', 'off');
+        L = Ripley{3,channel};
+        if size(L, 2) > 1
+            plot(R, L(:,1), R, L(:,2), R, L(:,3));
+        else
+            plot(R, L(:,1));
+        end
+        xlabel('r(nm)')
+        ylabel('L(r)')
+        savefig(h3,FPName)
+%         keyboard
+%         hgexport(h3, FPName);
+        close(h3);
 
-if size(K, 2) > 1
-    g = diff(K)./[(2 * pi * eR * dr), (2 * pi * eR * dr), (2 * pi * eR * dr)];
-    plot(eR, g(:,1), eR, g(:,2), eR, g(:,3));
-else
-    g = diff(K)./(2 * pi * eR * dr);
-    plot(eR, g(:,1));
-end
-xlabel('r(nm)')
-ylabel('g(r)')
-hgexport(h3, FPName, myStyle, 'Format', 'png');
-close(h3);
+        % save Lmr graph
+        if channel == 1 %red eventlist
+            FPName=[dir 'Lmr_red_' step '_' rmax '_' conf '_' iter fig_ext];
+        elseif channel == 2 %green eventlist
+            FPName=[dir 'Lmr_green_' step '_' rmax '_' conf '_' iter fig_ext];
+        end
+        h3 = figure('visible', 'off');
+        Lmr = Ripley{4,channel};
+        if size(Lmr, 2) > 1
+            plot(R, Lmr(:,1), R, Lmr(:,2), R, Lmr(:,3));
+        else
+            plot(R, Lmr(:,1));
+        end
+        xlabel('r(nm)')
+        ylabel('L(r) - r')
+        savefig(h3,FPName)
+%         hgexport(h3, FPName);
+%         hgexport(h3, FPName, myStyle, 'Format', 'png');
+        close(h3);
 
-end
+        % save g(r) graph
+        if channel == 1 %red eventlist
+            FPName=[dir 'g_red_' step '_' rmax '_' conf '_' iter fig_ext];
+        elseif channel == 2 %green eventlist
+            FPName=[dir 'g_green_' step '_' rmax '_' conf '_' iter fig_ext];
+        end
+        h3 = figure('visible', 'off');
+        K = Ripley{2,channel};
+        dr = R(2) - R(1);
+        eR = R(1:size(R,1)-1)+R(2)/2;
 
+        if size(K, 2) > 1
+            g = diff(K)./[(2 * pi * eR * dr), (2 * pi * eR * dr), (2 * pi * eR * dr)];
+            plot(eR, g(:,1), eR, g(:,2), eR, g(:,3));
+        else
+            g = diff(K)./(2 * pi * eR * dr);
+            plot(eR, g(:,1));
+        end
+        xlabel('r(nm)')
+        ylabel('g(r)')
+%         hgexport(h3, FPName, myStyle, 'Format', 'png');
+%         hgexport(h3, FPName);
+        savefig(h3,FPName)
+        close(h3);
 
-% save Voronoi cell functions
-if isfield(handles, 'VoronoiStats') && ~isempty(handles.VoronoiStats{1, channel})
-    
-% set style for graphs
-myStyle = hgexport('factorystyle');
-myStyle.Format = 'png';
-myStyle.Width = 6.41;
-myStyle.Height = 4;
-myStyle.Resolution = 300;
-myStyle.Units = 'inch';
-myStyle.FixedFontSize = 8;
-
-% get data
-conf = get(handles.edit5, 'String');
-iter = get(handles.edit6, 'String');
-VoronoiStats = handles.VoronoiStats;
-Histograms = VoronoiStats{1,channel};
-intersection = VoronoiStats(2,:);
-inters = num2str(round(intersection{channel}(1)));
-
-% save cell areas histogram    
-if channel == 1 %red eventlist
-    FPName=[dir 'Vor_red_' conf '_' iter '_' inters '.png'];
-elseif channel == 2 %green eventlist
-    FPName=[dir 'Vor_green_' conf '_' iter '_' inters '.png'];
-end
-h3 = figure('visible', 'off');
-if size(Histograms, 2) > 2 % monte carlo
-    plot(Histograms(:,1), Histograms(:,2), Histograms(:,1), Histograms(:,3), Histograms(:,1), Histograms(:,4), Histograms(:,1), Histograms(:,5));
-elseif size(Histograms, 2) == 2 % no monte-carlo
-    plot(Histograms(:,1), Histograms(:,2));
-end
-xlim([0, max(Histograms(:,1))]);
-ylim([0, max(max(Histograms(:,2:end)))]);
-xlabel('Voronoi polygon area (nm^2)')
-ylabel('Occurrence')
-hgexport(h3, FPName, myStyle, 'Format', 'png');
-close(h3);
-
-end
+        end
 
 
-% save stats and histograms
-if isfield(handles, 'stats') && ~isempty(handles.stats)
-stats = handles.stats{channel};
+        % save Voronoi cell functions
+        if isfield(handles, 'VoronoiStats') && ~isempty(handles.VoronoiStats{1, channel})
+
+            % set style for graphs
+            myStyle = hgexport('factorystyle');
+            myStyle.Format = 'png';
+            myStyle.Width = 6.41;
+            myStyle.Height = 4;
+            myStyle.Resolution = 300;
+            myStyle.Units = 'inch';
+            myStyle.FixedFontSize = 8;
+
+            % get data
+            conf = get(handles.edit5, 'String');
+            iter = get(handles.edit6, 'String');
+            VoronoiStats = handles.VoronoiStats;
+            Histograms = VoronoiStats{1,channel};
+            intersection = VoronoiStats(2,:);
+            inters = num2str(round(intersection{channel}(1)));
+
+            % save cell areas histogram
+            if channel == 1 %red eventlist
+                FPName=[dir 'Vor_red_' conf '_' iter '_' inters fig_ext];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'Vor_green_' conf '_' iter '_' inters fig_ext];
+            end
+            h3 = figure('visible', 'off');
+            if size(Histograms, 2) > 2 % monte carlo
+                plot(Histograms(:,1), Histograms(:,2), Histograms(:,1), Histograms(:,3), Histograms(:,1), Histograms(:,4), Histograms(:,1), Histograms(:,5));
+            elseif size(Histograms, 2) == 2 % no monte-carlo
+                plot(Histograms(:,1), Histograms(:,2));
+            end
+            xlim([0, max(Histograms(:,1))]);
+            ylim([0, max(max(Histograms(:,2:end)))]);
+            xlabel('Voronoi polygon area (nm^2)')
+            ylabel('Occurrence')
+            savefig(h3,FPName)
+%             hgexport(h3, FPName);
+%             hgexport(h3, FPName, myStyle, 'Format', 'png');
+            close(h3);
+
+        end
 
 
-p = str2double(get(handles.edit7, 'String')); % pixel size in nm
-bins = str2double(get(handles.edit25, 'String'));
+        % save stats and histograms
+        if isfield(handles, 'stats') && ~isempty(handles.stats)
+            stats = handles.stats{channel};
 
- % cluster area
-if base ~= 4
-    area = cat(1, stats.Area) * p^2; % cluster area in nm^2
-else
-    area = stats(:,2); % cluster area in nm^2
-end
-    h1=figure('visible', 'off');
-    hist(area, bins);
-    mea = num2str(mean(area));
-    med = num2str(median(area));
-    st = num2str(std(area));
-if channel == 1 %red eventlist
-FPName=[dir 'cluster_area_red_' mea '_' med '_' st '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'cluster_area_green_' mea '_' med '_' st '.png'];
-end
-    xlabel('cluster area, nm^2')
-    ylabel('occurrence')
-    hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
-    close(h1);
-    
- % diameter
-if base ~= 4
-    diam = cat(1, stats.EquivDiameter) * p; % cluster diameter in nm
-else
-    diam = 2 * sqrt(stats(:,2)/pi);
-end
-    h1=figure('visible', 'off');
-    hist(diam, bins);
-    mea = num2str(mean(diam));
-    med = num2str(median(diam));
-    st = num2str(std(diam));
-if channel == 1 %red eventlist
-FPName=[dir 'cluster_diameter_red_' mea '_' med '_' st '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'cluster_diameter_green_' mea '_' med '_' st '.png'];
-end
-    xlabel('cluster diameter, nm')
-    ylabel('occurrence')
-    hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
-    close(h1);
-    
- % eccentricity
- if base ~= 4
-    eccentr = cat(1, stats.Eccentricity); % cluster eccentricity 
- else
-     eccentr = stats(:,3);
- end
-    h1=figure('visible', 'off');
-    hist(eccentr, bins);
-    mea = num2str(mean(eccentr));
-    med = num2str(median(eccentr));
-    st = num2str(std(eccentr));
-if channel == 1 %red eventlist
-FPName=[dir 'cluster_eccentricity_red_' mea '_' med '_' st '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'cluster_eccentricity_green_' mea '_' med '_' st '.png'];
-end
-    xlabel('cluster eccentricity')
-    ylabel('occurrence')
-    hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
-    close(h1);
-    
- % events
- if base ~= 4
-    I0 = handles.I0{channel};
-    s = size(stats, 1);
-    NBevents = zeros(s,1);
-    for i = 1:s
-        ind = stats(i).PixelIdxList;
-        NBevents(i) = sum(I0(ind));
-    end
- else
-     NBevents = stats(:,1);
- end
-    h1=figure('visible', 'off');
-    hist(NBevents, bins);
-    mea = num2str(mean(NBevents));
-    med = num2str(median(NBevents));
-    st = num2str(std(NBevents));
-if channel == 1 %red eventlist
-FPName=[dir 'events_in_cluster_red_' mea '_' med '_' st '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'events_in_cluster_green_' mea '_' med '_' st '.png'];
-end
-    xlabel('number of events in cluster')
-    ylabel('occurrence')
-    hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
-    close(h1);
-    
- % density
- if base ~= 4
-    Dens = zeros(s,1);
-    for i = 1:s
-        ind = stats(i).PixelIdxList;
-        NBeventsi = sum(I0(ind));
-        Dens(i) = NBeventsi/(area(i) * 0.001^2); % events/µm^2
-    end 
- else
-     Dens = 1000 * stats(:,1) ./ stats(:,2); % events/µm^2
- end
-    h1=figure('visible', 'off');
-    hist(Dens, bins);
-    mea = num2str(mean(Dens));
-    med = num2str(median(Dens));
-    st = num2str(std(Dens));
-if channel == 1 %red eventlist
-FPName=[dir 'density_in_cluster_red_' mea '_' med '_' st '.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'density_in_cluster_green_' mea '_' med '_' st '.png'];
-end
-    xlabel('density of events in cluster, 1/µm')
-    ylabel('occurrence')
-    hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
-    close(h1);
-    
-clusters = [area, diam, eccentr, NBevents, Dens];
-if channel == 1 %red eventlist
-FPName=[dir 'clusterStat_red.ascii'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'clusterStat_green.ascii'];
-end    
-dlmwrite(FPName, clusters);
-end
 
-%save screenshot
-if channel == 1 %red eventlist
-FPName=[dir 'screenshot_red.png'];
-elseif channel == 2 %green eventlist
-FPName=[dir 'screenshot_green.png'];
-end    
-hgexport(gcf, FPName, hgexport('factorystyle'), 'Format', 'png');
+            p = str2double(get(handles.edit7, 'String')); % pixel size in nm
+            bins = str2double(get(handles.edit25, 'String'));
 
-catch errorObj
-    errordlg(getReport(errorObj,'extended','hyperlinks','off'),'Error');
-end
-    
-    
+             % cluster area
+            if base ~= 4
+                area = cat(1, stats.Area) * p^2; % cluster area in nm^2
+            else
+                area = stats(:,2); % cluster area in nm^2
+            end
+                h1=figure('visible', 'off');
+                hist(area, bins);
+                mea = num2str(mean(area));
+                med = num2str(median(area));
+                st = num2str(std(area));
+            if channel == 1 %red eventlist
+                FPName=[dir 'cluster_area_red_' mea '_' med '_' st fig_ext];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'cluster_area_green_' mea '_' med '_' st fig_ext];
+            end
+                xlabel('cluster area, nm^2')
+                ylabel('occurrence')
+                savefig(h1,FPName)
+%                 hgexport(h1, FPName);
+%                 hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
+                close(h1);
+
+             % diameter
+            if base ~= 4
+                diam = cat(1, stats.EquivDiameter) * p; % cluster diameter in nm
+            else
+                diam = 2 * sqrt(stats(:,2)/pi);
+            end
+                h1=figure('visible', 'off');
+                hist(diam, bins);
+                mea = num2str(mean(diam));
+                med = num2str(median(diam));
+                st = num2str(std(diam));
+            if channel == 1 %red eventlist
+                FPName=[dir 'cluster_diameter_red_' mea '_' med '_' st fig_ext];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'cluster_diameter_green_' mea '_' med '_' st fig_ext];
+            end
+                xlabel('cluster diameter, nm')
+                ylabel('occurrence')
+                savefig(h1,FPName)
+%                 hgexport(h1, FPName);
+%                 hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
+                close(h1);
+
+             % eccentricity
+             if base ~= 4
+                eccentr = cat(1, stats.Eccentricity); % cluster eccentricity
+             else
+                 eccentr = stats(:,3);
+             end
+                h1=figure('visible', 'off');
+                hist(eccentr, bins);
+                mea = num2str(mean(eccentr));
+                med = num2str(median(eccentr));
+                st = num2str(std(eccentr));
+            if channel == 1 %red eventlist
+                FPName=[dir 'cluster_eccentricity_red_' mea '_' med '_' st fig_ext];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'cluster_eccentricity_green_' mea '_' med '_' st fig_ext];
+            end
+                xlabel('cluster eccentricity')
+                ylabel('occurrence')
+                savefig(h1,FPName)
+%                 hgexport(h1, FPName);
+%                 hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
+                close(h1);
+
+             % events
+             if base ~= 4
+                I0 = handles.I0{channel};
+                s = size(stats, 1);
+                NBevents = zeros(s,1);
+                for i = 1:s
+                    ind = stats(i).PixelIdxList;
+                    NBevents(i) = sum(I0(ind));
+                end
+             else
+                 NBevents = stats(:,1);
+             end
+                h1=figure('visible', 'off');
+                hist(NBevents, bins);
+                mea = num2str(mean(NBevents));
+                med = num2str(median(NBevents));
+                st = num2str(std(NBevents));
+            if channel == 1 %red eventlist
+                FPName=[dir 'events_in_cluster_red_' mea '_' med '_' st fig_ext];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'events_in_cluster_green_' mea '_' med '_' st fig_ext];
+            end
+                xlabel('number of events in cluster')
+                ylabel('occurrence')
+                savefig(h1,FPName)
+%                 hgexport(h1, FPName);
+%                 hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
+                close(h1);
+
+             % density
+             if base ~= 4
+                Dens = zeros(s,1);
+                for i = 1:s
+                    ind = stats(i).PixelIdxList;
+                    NBeventsi = sum(I0(ind));
+                    Dens(i) = NBeventsi/(area(i) * 0.001^2); % events/ï¿½m^2
+                end
+             else
+                 Dens = 1000 * stats(:,1) ./ stats(:,2); % events/ï¿½m^2
+             end
+                h1=figure('visible', 'off');
+                hist(Dens, bins);
+                mea = num2str(mean(Dens));
+                med = num2str(median(Dens));
+                st = num2str(std(Dens));
+            if channel == 1 %red eventlist
+                FPName=[dir 'density_in_cluster_red_' mea '_' med '_' st fig_ext];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'density_in_cluster_green_' mea '_' med '_' st fig_ext];
+            end
+                xlabel('density of events in cluster, 1/ï¿½m')
+                ylabel('occurrence')
+                savefig(h1,FPName)
+%                 hgexport(h1, FPName);
+%                 hgexport(h1, FPName, hgexport('factorystyle'), 'Format', 'png');
+                close(h1);
+
+            clusters = [area, diam, eccentr, NBevents, Dens];
+            if channel == 1 %red eventlist
+                FPName=[dir 'clusterStat_red.ascii'];
+            elseif channel == 2 %green eventlist
+                FPName=[dir 'clusterStat_green.ascii'];
+            end
+            dlmwrite(FPName, clusters);
+        end
+
+        %save screenshot
+        if channel == 1 %red eventlist
+            FPName=[dir 'screenshot_red' fig_ext];
+        elseif channel == 2 %green eventlist
+            FPName=[dir 'screenshot_green' fig_ext];
+        end
+        hgexport(gcf, FPName);
+%         hgexport(gcf, FPName, hgexport('factorystyle'), 'Format', 'png');
+
+        catch errorObj
+            errordlg(getReport(errorObj,'extended','hyperlinks','off'),'Error');
+        end
+
+
 
 % --------------------------------------------------------------------
 function LAS_AF_Callback(hObject, eventdata, handles)
@@ -1388,7 +1435,7 @@ function QuickPALM_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 try
-    
+
 channel = get(handles.popupmenu1, 'Value');
 text{1} = '642-nm eventlist';
 text{2} = '488/532-nm eventlist';
@@ -1507,16 +1554,16 @@ end
 if isfield(handles, 'LimRGB')
     handles.LimRGB(channel, :) = [];
 end
-cla(handles.axes1); 
-cla(handles.axes2); 
-cla(handles.axes3); 
-cla(handles.axes4); 
-cla(handles.axes5); 
+cla(handles.axes1);
+cla(handles.axes2);
+cla(handles.axes3);
+cla(handles.axes4);
+cla(handles.axes5);
 
 
 % --- Executes when selected object is changed in uipanel8.
 function uipanel8_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel8 
+% hObject    handle to the selected object in uipanel8
 % eventdata  structure with the following fields (see UIBUTTONGROUP)
 %	EventName: string 'SelectionChanged' (read only)
 %	OldValue: handle of the previously selected object or empty if none was selected
